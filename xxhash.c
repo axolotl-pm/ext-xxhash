@@ -16,6 +16,12 @@
 # error "ext-xxhash requires a 64-bit build of PHP"
 #endif
 
+#if PHP_VERSION_ID >= 80600
+# define XXHASH_PARSE_PARAMETERS_START(min_num_args, max_num_args) ZEND_PARSE_PARAMETERS_START(min_num_args, max_num_args)
+#else
+# define XXHASH_PARSE_PARAMETERS_START(min_num_args, max_num_args) ZEND_PARSE_PARAMETERS_START_EX(ZEND_PARSE_PARAMS_THROW, min_num_args, max_num_args)
+#endif
+
 #define ACCEPT_STRING_INPUT() \
 
 
@@ -23,7 +29,7 @@
 PHP_FUNCTION(name) { \
 	zend_string *input; \
 	\
-	ZEND_PARSE_PARAMETERS_START_EX(ZEND_PARSE_PARAMS_THROW, 1, 1) \
+	XXHASH_PARSE_PARAMETERS_START(1, 1) \
 		Z_PARAM_STR(input) \
 	ZEND_PARSE_PARAMETERS_END(); \
 	\
@@ -43,7 +49,7 @@ STRING_HASH_FUNC(xxhash3_128bits, XXH3_128bits_withSeed, 128);
 PHP_FUNCTION(name) { \
 	zend_long input; \
 	\
-	ZEND_PARSE_PARAMETERS_START_EX(ZEND_PARSE_PARAMS_THROW, 1, 1) \
+	XXHASH_PARSE_PARAMETERS_START(1, 1) \
 		Z_PARAM_LONG(input) \
 	ZEND_PARSE_PARAMETERS_END(); \
 	\
